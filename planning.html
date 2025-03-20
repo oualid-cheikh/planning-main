@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="img/logo-nova-blanc.jpg">
+  
+</head>
+<body>
+<div class="container">
+  <h1>Gestion des Plannings</h1>
+  
+  <div class="suggestions-container hidden" id="suggestionsContainer">
+    <h3>Meilleures suggestions</h3>
+      <div class="suggestion-cards" id="suggestionCards"></div>
+  </div>
+
+  <div id="distanceCalculationMessage" style="display: none; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+    Calcul de distance en cours...
+  </div>
+
+  <div class="controls">
+    <select id="countrySelect">
+      <!-- Les options seront ajoutées dynamiquement par script.js -->
+    </select>
+    <select id="planningSelect">
+      <!-- Les options seront ajoutées dynamiquement par script.js -->
+    </select>
+
+    
+    <button onclick="addPlanning()">+ Nouveau Planning</button>
+    <button onclick="suggestSlot()">Suggérer un Créneau</button>
+    
+    <button onclick="logout()" class="logout-btn" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></button>
+  </div>
+  
+  <div id="planningContainer" class="planning-grid"></div>
+</div>
+
+<!-- Modal pour la sélection de ville -->
+<div id="cityModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Sélectionnez une ville</h3>
+      <span class="close-modal" onclick="closeCityModal()">&times;</span>
+    </div>
+    <input type="text" id="citySearch" class="modal-search" placeholder="Rechercher une ville..." oninput="filterCities()">
+    <div id="cityList" class="city-list"></div>
+  </div>
+</div>
+
+<!-- Modal pour la saisie du nom du planning -->
+<div id="planningNameModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Nouveau Planning</h3>
+      <span class="close-modal" onclick="closePlanningNameModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="planningName">Nom du planning :</label>
+        <input type="text" id="planningName" class="modal-input" placeholder="Entrez le nom du planning">
+      </div>
+      <div class="form-group">
+        <label>Sélectionnez les horaires :</label>
+        <div class="hours-selection" style="display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 10px;
+        max-height: 200px;
+        overflow-y: auto;">
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-8" value="8h">
+            <label for="hour-8">8h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-9" value="9h">
+            <label for="hour-9">9h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-10" value="10h" checked>
+            <label for="hour-10">10h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-10" value="10h10" >
+            <label for="hour-10">10h10</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-10" value="10h20" >
+            <label for="hour-20">10h20</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-10" value="10h30" >
+            <label for="hour-30">10h30</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-11" value="11h">
+            <label for="hour-11">11h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-12" value="12h">
+            <label for="hour-12">12h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-13" value="13h" checked>
+            <label for="hour-13">13h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-13" value="13h10" >
+            <label for="hour-13">13h10</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-13" value="13h20" >
+            <label for="hour-13">13h20</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-13" value="13h30" >
+            <label for="hour-13">13h30</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-14" value="14h">
+            <label for="hour-14">14h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-15" value="15h">
+            <label for="hour-15">15h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-16" value="16h" checked>
+            <label for="hour-16">16h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-16" value="16h10" >
+            <label for="hour-16">16h10</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-16" value="16h20" >
+            <label for="hour-16">16h20</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-16" value="16h30" >
+            <label for="hour-16">16h30</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-17" value="17h">
+            <label for="hour-17">17h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-18" value="18h">
+            <label for="hour-18">18h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-19" value="19h" checked>
+            <label for="hour-19">19h</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-19" value="19h10" >
+            <label for="hour-19">19h10</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-19" value="19h20" >
+            <label for="hour-19">19h20</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-19" value="19h30" >
+            <label for="hour-19">19h30</label>
+          </div>
+          <div class="hour-checkbox">
+            <input type="checkbox" id="hour-20" value="20h">
+            <label for="hour-20">20h</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closePlanningNameModal()">Annuler</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmPlanningName()">Créer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour la saisie du code postal -->
+<div id="postalCodeModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Suggérer un créneau</h3>
+      <span class="close-modal" onclick="closePostalCodeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="postalCode">Code postal :</label>
+        <div class="postal-code-input">
+          <input type="text" id="postalCode" class="modal-input" placeholder="Entrez le code postal">
+          <span class="country-code" id="displayCountryCode"></span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closePostalCodeModal()">Annuler</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmPostalCode()">Rechercher</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth-bridge.js"></script>
+<script src="js/script.js"></script>
+<!-- <script>
+    function refreshPlanning() {
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            loadPlannings(userId);
+        }
+    }
+</script> -->
+<!-- <script>
+  setTimeout(function() {
+    location.reload();
+}, 120000); // 2 minutes
+</script> -->
+
+
+  
+</body>
+</html>
